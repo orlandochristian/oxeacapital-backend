@@ -9,7 +9,7 @@ const db =  require("../Db/dbConfig.js");
 
 const getAllClients = async () => {
     try {
-      const allClients = await db.any("select * from clients");
+      const allClients = await db.any("select * from clients order by last_name");
      
       return allClients;
     } catch (error) {
