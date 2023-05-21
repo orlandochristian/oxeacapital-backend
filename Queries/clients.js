@@ -5,6 +5,8 @@ const db =  require("../Db/dbConfig.js");
 
 
 
+
+
 const getAllClients = async () => {
     try {
       const allClients = await db.any("select * from clients");
@@ -31,7 +33,7 @@ const getAllClients = async () => {
     
    
     try {
-      const newClient = await db.one(`INSERT INTO clients (first_name,last_name,direccion,telefono,email,ss,dob,lic_number) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`, [client.first_name,client.last_name,client.direccion,client.telefono,client.email,client.ss,client.dob,client.lic_number]);
+      const newClient = await db.one(`INSERT INTO clients (first_name,last_name,direccion,telefono,email,ss,dob,lic_number) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`, [client.firstname,client.lastname,client.direccion,client.telefono,client.email,client.ss,client.dob,client.lic_number]);
       return newClient; 
     } catch (error) {
       return {error};
@@ -69,4 +71,5 @@ const getAllClients = async () => {
     createClient,
     updateClient,
     deleteClient,
+   
     };

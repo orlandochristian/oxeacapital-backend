@@ -1,27 +1,39 @@
 const express = require('express');
 const loans = express.Router({ mergeParams: true});
+const paymentsController = require("./paymentsController");
 //const {validateNAF} = require('../Validations/validation')
 
 const {
-    getAllLoansByClient,
+    getActiveLoanByClient,
+    getHistoryLoansByClient,
     getLoanByClient,
-    createLoan,
+    createNewLoan,
     updateLoan,
     deleteLoan,
 } =  require('../Queries/loans');
 
-
+loans.use("/:loanId/payments",paymentsController)
 
 // localhost:3345/clients/:clientId/loans
-loans.get("/", async (req, res) => {
+loans.get("/active", async (req, res) => {
   const {clientId} = req.params;
-  const allLoans = await getAllLoansByClient(clientId);
-  if (!allLoans.error) {
-    res.status(200).json(allLoans);
+  const allActive = await getActiveLoanByClient(clientId);
+  if (!allActive.error) {
+    res.status(200).json(allActive);
   } else {
     res.status(500).json({ error: "server error!!!!" });
   } 
 });
+
+loans.get("/history", async (req, res) => {
+    const {clientId} = req.params;
+    const allHistory = await getHistoryLoansByClient(clientId);
+    if (!allHistory.error) {
+      res.status(200).json(allHistory);
+    } else {
+      res.status(500).json({ error: "server error!!!!" });
+    } 
+  });
 
 // //show
 // // localhost:3345/clients/:clientId/loans/:LoanId 
@@ -42,7 +54,8 @@ loans.get("/:loanId", async(req, res) => {
 // //localhost:3345/clients/:clientId/loans
 loans.post("/", async (req, res) => {
             const { clientId } = req.params;
-            const newLoan = await createLoan(req.body,clientId);
+           
+            const newLoan = await createNewLoan(req.body,clientId);
             if (!newLoan.error) {
                 res.status(200).json(newLoan);
             } else {

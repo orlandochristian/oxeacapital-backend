@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const clientsController = require("./Controllers/clientsController");
-
+const activeloansController = require("./Controllers/activeloansController");
 
 
 //configuration
@@ -18,6 +18,8 @@ app.get("/", (req, res) => {
   });
 
   app.use("/clients", clientsController);
+  app.use("/activeloans", activeloansController);
+  
 
   //app.use("/loans", loansController);
 

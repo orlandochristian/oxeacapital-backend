@@ -2,14 +2,24 @@
 
 const db =  require("../Db/dbConfig.js");
 
-const getAllLoansByClient = async (clientId) => {
+const getActiveLoanByClient = async (clientId) => {
   try {
-    const allLoans = await db.any("SELECT * FROM loans where client_id= $1",[clientId]);
-    return allLoans;
+    const allActive = await db.any("SELECT * FROM loans where client_id= $1 and active  fetch first row only",[clientId]);
+    return allActive;
   } catch (error) {
     return {error};
   }
 };
+
+const getHistoryLoansByClient = async (clientId) => {
+    try {
+      const allHistory = await db.any("SELECT l.*, c.closedate,c.note FROM loans l join closedloan c on (l.loan_id= c.loan_id) where client_id= $1 and not active  fetch first row only",[clientId]);
+      return allHistory;
+    } catch (error) {
+      return {error};
+    }
+  };
+
 
 const getLoanByClient = async (clientId,loanId) => {
   try {
@@ -22,10 +32,12 @@ const getLoanByClient = async (clientId,loanId) => {
 }
 
 
-const createLoan = async (loan,clientId) => {
-    const {totalamount, amountdue,interestrate,startdate,appfee, active} =  loan;
+const createNewLoan = async (loan,clientId) => {
+   
+    const {totalamount,interestrate,startdate,appfee,numberofpayment} =  loan;
+   
   try {
-    const newLoan = await db.one(`INSERT INTO loans (totalamount, amountdue, interestrate, startdate, appfee, active, client_id) VALUES ($1, $2, $3, $4,$5,$6,$7) RETURNING *`, [totalamount, amountdue,interestrate, startdate,appfee,active,clientId]);
+    const newLoan = await db.one(`INSERT INTO loans (totalamount, amountdue, interestrate, startdate, appfee, active, numberofpayment, client_id) VALUES ($1, $2, $3, $4,$5,$6,$7,$8) RETURNING *`, [totalamount, totalamount,interestrate, startdate,appfee,true,numberofpayment,clientId]);
     return newLoan; 
   } catch (error) {
     return {error};
@@ -60,9 +72,10 @@ const createLoan = async (loan,clientId) => {
 
 
 module.exports = {
-  getAllLoansByClient, 
+ getActiveLoanByClient, 
+ getHistoryLoansByClient,
   getLoanByClient,
-  createLoan,
+  createNewLoan,
   updateLoan,
   deleteLoan,
   };

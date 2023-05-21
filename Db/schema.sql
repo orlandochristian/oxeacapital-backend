@@ -29,7 +29,7 @@
 
 --  CREATE TABLE payments (
 --     payment_id SERIAL PRIMARY KEY,
---     paymentmount NUMERIC(8,2) NOT NULL,
+--     paymentamount NUMERIC(8,2) NOT NULL,
 --     interestamount NUMERIC(8,2) NOT NULL,
 --     paymentdate TEXT NOT NULL,
 --     loan_id INT,

@@ -8,12 +8,15 @@ const {
      createClient,
      updateClient,
      deleteClient,
+    
   
 } =  require('../Queries/clients');
 
 
  //localhost:3345/clients/:clientId/loans
  clients.use("/:clientId/loans",loansController)
+
+
 
 
 
